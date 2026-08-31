@@ -1,6 +1,6 @@
 import streamlit as st #the python library which allows for quick creation of an interface
 from db import init_db, save_generation, get_conn 
-from generate import call_claude
+from generate import generate_ad_copy
 
 init_db() 
 

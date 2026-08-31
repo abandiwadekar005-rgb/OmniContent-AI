@@ -1,12 +1,11 @@
+import os
+from google import genai
 
-import anthropic
+client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
 
-client = anthropic.Anthropic()  # reads ANTHROPIC_API_KEY from environment
-
-def call_claude(prompt):
-    response = client.messages.create(
-        model="claude-sonnet-4-6",
-        max_tokens=300,
-        messages=[{"role": "user", "content": prompt}]
+def generate_ad_copy(prompt):
+    response = client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents=prompt
     )
-    return response.content[0].text
+    return response.text
