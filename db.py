@@ -26,12 +26,14 @@ def init_db():
 
 def save_generation(campaign_id, text, parent_id=None):
     conn = get_conn()
-    conn.execute(
+    cur = conn.execute(
         "INSERT INTO generations (campaign_id, text, parent_id) VALUES (?, ?, ?)",
         (campaign_id, text, parent_id)
     )
     conn.commit()
+    new_id = cur.lastrowid
     conn.close()
+    return new_id
 
 
 def get_generations(campaign_id):
