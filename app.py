@@ -64,11 +64,3 @@ for gen_id, text, status in get_generations(campaign_id):
     st.write(f"**#{gen_id}** ({status}): {text}")
 
 # Use this for testing: 
-"""
-Launch an exciting football esports tournament for young gamers. 
-The competition will feature popular football video games, with players competing online for prizes and recognition. 
-Target football fans and esports players aged 16–25. 
-Make the campaign energetic, competitive, and modern, and encourage players to register and prove their skills.
-
-Make it more hype, shorter, and use language that would appeal to competitive football gamers.
-"""
