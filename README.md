@@ -23,4 +23,15 @@ Built deliberately simple, to actually finish it in the time I had (roughly 20 h
 
 2) SQLite (sqlite3, no ORM) — a single local database file, no server to set up.
 
-3) Gemini 2.5 Flash: — one function, one model, one provider.
+3) Gemini 3.6 Flash: — one function, one model, one provider.
+
+# UPDATE(5th September 2026):
+- API layer (api.py) — a FastAPI backend exposing the app's core logic as HTTP endpoints, separate from the Streamlit UI
+
+- Endpoints: /generate, /generations/{id}/approve, /generations/{id}/reject, /generations/{id}/improve, /generations
+
+- Why: the app's core logic and its interface used to be mixed together in one place. Splitting them apart means the actual logic (generating, approving, rejecting, improving) doesn't depend on Streamlit specifically anymore — any interface could use it, not just this one.
+
+- Currently still runs locally alongside the Streamlit app, but not yet wired together — app.py still calls the functions directly rather than going through the API
+
+- Next Steps: connect app.py to acall these endpoints instead, and deploy the API seperately
