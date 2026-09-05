@@ -26,5 +26,10 @@ def generate():
     except Exception as e:
         return jsonify({"error": f"Generation failed: {e}"}), 502 # returns n error message instead of wondering what to do
 
-    new_id = save_generation(campaign_id=campaign_id, text=result)
-    return jsonify({"id": new_id, "text": result})
+    new_id = save_generation(campaign_id=campaign_id, text=result) # saves the generation made by gemini
+    return jsonify({"id": new_id, "text": result}) # converts info into JSON and sends it back as the API
+
+@app.post("/generations/<int:generation_id>/approve")
+def approve(generation_id):
+    update_status(generation_id, "approved")
+    return jsonify({"id": generation_id, "status": "approved"})
