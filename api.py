@@ -33,3 +33,8 @@ def generate():
 def approve(generation_id):
     update_status(generation_id, "approved")
     return jsonify({"id": generation_id, "status": "approved"})
+
+@app.post("/generations/<int:generation_id>/reject")
+def reject(generation_id):
+    update_status(generation_id, "rejected")
+    return jsonify({"id": generation_id, "status": "rejected"})
