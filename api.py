@@ -42,6 +42,8 @@ def reject(generation_id):
 @app.post("/generations/<int:generation_id>/improve")
 def improve(generation_id):
     data = request.get_json()
+    # pulling fields out manually since Flask doesn't validate the shape for us
+    # (this is the bit FastAPI would've done automatically with a Pydantic model)
     original_text = data.get("original_text", "")
     instruction = data.get("instruction", "")
     campaign_id = data.get("campaign_id", 1)
@@ -52,11 +54,15 @@ def improve(generation_id):
     except Exception as e:
         return jsonify({"error": f"Improve failed: {e}"}), 502
 
+    # generation_id here becomes the parent — same linking idea as app.py's Improve button
     new_id = save_generation(campaign_id=campaign_id, text=new_result, parent_id=generation_id)
     return jsonify({"id": new_id, "text": new_result})
 
 @app.get("/generations")
 def list_generations():
+    # defaults to campaign 1 if the caller doesn't specify one
     campaign_id = request.args.get("campaign_id", 1, type=int)
     rows = get_generations(campaign_id)
+    # rows come back as raw tuples from sqlite — converting to dicts so jsonify
+    # actually produces named fields instead of a plain array of arrays
     return jsonify([{"id": r[0], "text": r[1], "status": r[2]} for r in rows])
