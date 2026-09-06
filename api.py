@@ -38,3 +38,19 @@ def approve(generation_id):
 def reject(generation_id):
     update_status(generation_id, "rejected")
     return jsonify({"id": generation_id, "status": "rejected"})
+
+@app.post("/generations/<int:generation_id>/improve")
+def improve(generation_id):
+    data = request.get_json()
+    original_text = data.get("original_text", "")
+    instruction = data.get("instruction", "")
+    campaign_id = data.get("campaign_id", 1)
+
+    new_prompt = f"Revise this: {original_text}\nInstruction: {instruction}"
+    try:
+        new_result = generate_ad_copy(new_prompt)
+    except Exception as e:
+        return jsonify({"error": f"Improve failed: {e}"}), 502
+
+    new_id = save_generation(campaign_id=campaign_id, text=new_result, parent_id=generation_id)
+    return jsonify({"id": new_id, "text": new_result})
