@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 
 # imports functions from db.py and generate.py. connect API to the project
-from db import init_db, save_generation, get_generation, update_status
+from db import init_db, save_generation, get_generations, update_status
 from generate import generate_ad_copy
 
 # initalises the flask application instance
@@ -54,3 +54,9 @@ def improve(generation_id):
 
     new_id = save_generation(campaign_id=campaign_id, text=new_result, parent_id=generation_id)
     return jsonify({"id": new_id, "text": new_result})
+
+@app.get("/generations")
+def list_generations():
+    campaign_id = request.args.get("campaign_id", 1, type=int)
+    rows = get_generations(campaign_id)
+    return jsonify([{"id": r[0], "text": r[1], "status": r[2]} for r in rows])
